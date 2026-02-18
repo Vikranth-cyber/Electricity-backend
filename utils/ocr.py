@@ -173,37 +173,17 @@ def extract_text_from_pdf_ocr(file_bytes: bytes) -> str:
 # ---------------------------------------------------------------------------
 
 def extract_text(file_bytes: bytes, filename: str) -> str:
-    """
-    Main entry point: extract cleaned text from a bill file (PDF or image).
-
-    For PDFs:
-        1. Attempt digital text extraction (fast, accurate for native PDFs).
-        2. Fall back to OCR if digital extraction returns too little text.
-
-    For images:
-        Run Tesseract OCR directly.
-
-    Args:
-        file_bytes: Raw bytes of the uploaded file.
-        filename:   Original filename (used to determine file type by extension).
-
-    Returns:
-        Cleaned, lowercased text ready for extract_bill_data() in extractor.py.
-
-    Raises:
-        ValueError:   If the file extension is not supported.
-        RuntimeError: If both extraction strategies fail (PDFs) or OCR fails (images).
-    """
     ext = os.path.splitext(filename.lower())[1]
 
     if ext == ".pdf":
-        # Step 1: Try digital extraction
         digital_text = extract_text_from_pdf_digital(file_bytes)
         if digital_text:
             return digital_text
 
-        # Step 2: Fallback to OCR
-        return extract_text_from_pdf_ocr(file_bytes)
+        raise RuntimeError(
+            "Scanned PDFs are not supported in cloud deployment. "
+            "Please upload a digital electricity bill PDF."
+        )
 
     elif ext in (".jpg", ".jpeg", ".png", ".bmp", ".tiff", ".tif", ".webp"):
         return extract_text_from_image(file_bytes)
@@ -213,8 +193,7 @@ def extract_text(file_bytes: bytes, filename: str) -> str:
             f"Unsupported file type '{ext}'. "
             "Supported types: PDF, JPG, JPEG, PNG, BMP, TIFF, WEBP"
         )
-
-
+    
 # ---------------------------------------------------------------------------
 # TEXT CLEANING
 # ---------------------------------------------------------------------------
