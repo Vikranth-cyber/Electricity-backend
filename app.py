@@ -33,7 +33,8 @@ app = Flask(__name__)
 
 # Allow all origins in development.  Restrict to your frontend URL in production:
 #   CORS(app, origins=["http://localhost:5173"])
-CORS(app)
+CORS(app, origins=["https://electricity-frontend-ten.vercel.app"])
+
 
 # Max upload size: 16 MB
 app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024
