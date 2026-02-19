@@ -24,11 +24,11 @@ try:
     import pytesseract
     from PIL import Image
 
-    tesseract_cmd = os.environ.get(
-        "TESSERACT_CMD",
-        r"C:\Program Files\Tesseract-OCR\tesseract.exe"
-    )
-    pytesseract.pytesseract.tesseract_cmd = tesseract_cmd
+    tesseract_cmd = os.environ.get("TESSERACT_CMD")
+
+    if tesseract_cmd:
+       pytesseract.pytesseract.tesseract_cmd = tesseract_cmd
+
     TESSERACT_AVAILABLE = True
 except ImportError:
     TESSERACT_AVAILABLE = False
